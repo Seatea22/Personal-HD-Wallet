@@ -1,15 +1,12 @@
-import os
-import pyperclip
-import secrets
-import random
 import hashlib
-import struct
-import pathlib
+import secrets
 from typing import List
+
+import pyperclip
 
 
 class SeedGen:
-    def __init__(self, seed: str, passphrase=None, iterations=100000):
+    def __init__(self, seed="", passphrase=None, iterations=100000):
         self.seed = "mnemonic" + seed
         self.passphrase = passphrase
         self.iterations = iterations
