@@ -2,21 +2,21 @@ import hashlib
 import secrets
 from typing import List
 
-import pyperclip
-
 
 class SeedGen:
-    def __init__(self, seed="", passphrase=None, iterations=100000):
-        self._seed = "mnemonic" + seed
+    def __init__(self, seed_length=12, salt="", passphrase=None, iterations=100000):
+        self._seed_length = seed_length
+        self._salt = "mnemonic" + salt
         self._passphrase = passphrase
         self._iterations = iterations
-        self._final_hash_seed = ""
+
+        self._final_hash_seed = self.__generate_seed(seed_length)
 
     @property
     def final_hash_seed(self) -> str:
         return self._final_hash_seed
 
-    def generate_seed(self, seed_length=12) -> None:
+    def __generate_seed(self, seed_length: int) -> str:
         if seed_length != 12 and seed_length != 24:
             raise ValueError("Please provide a seed length of 12 or 24")
 
@@ -25,8 +25,7 @@ class SeedGen:
             mnemonic = self.__generate_checksum(entropy_bits)
             self.__generate_phrase(mnemonic)
 
-        self._final_hash_seed = hashlib.pbkdf2_hmac('sha512', self._passphrase.encode('utf-8'),
-                                                    self._seed.encode('utf-8'), 2048).hex()
+        return hashlib.pbkdf2_hmac('sha512', self._passphrase.encode('utf-8'), self._salt.encode('utf-8'), 2048).hex()
 
     def __generate_entropy(self, seed_length: int) -> str:
         bit_length = 128 if seed_length == 12 else 256
