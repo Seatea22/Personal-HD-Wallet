@@ -32,6 +32,15 @@ class SeedGen:
         self._final_hash_seed = self.__generate_seed(seed_length)
 
     @property
+    def salt(self):
+        return self._salt
+
+    @property
+    def iterations(self):
+        """The number of iterations performed during final hash seed generation."""
+        return self._iterations
+
+    @property
     def passphrase(self) -> str:
         """A space separated string containing a mnemonic string of 12 or 24 words."""
         return self._passphrase
@@ -64,7 +73,12 @@ class SeedGen:
             mnemonic = self.__generate_checksum(entropy_bits)
             self.__generate_phrase(mnemonic)
 
-        return hashlib.pbkdf2_hmac('sha512', self._passphrase.encode('utf-8'), self._salt.encode('utf-8'), self._iterations).hex()
+        return hashlib.pbkdf2_hmac(
+            'sha512',
+            self._passphrase.encode('utf-8'),
+            self._salt.encode('utf-8'),
+            self._iterations
+        ).hex()
 
     def __generate_entropy(self, seed_length: int) -> str:
         """
