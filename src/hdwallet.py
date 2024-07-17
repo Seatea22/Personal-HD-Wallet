@@ -1,8 +1,10 @@
+from abc import ABC, abstractmethod
 from typing import Tuple
 import hmac
 import hashlib
 
 from seedgen import SeedGen
+
 
 class HDWallet:
 
@@ -24,11 +26,6 @@ class HDWallet:
         )
         hashed_seed = hmac_obj.hexdigest()
 
-        master_pk = hashed_seed[:len(hashed_seed)//2]
-        master_cc = hashed_seed[len(hashed_seed)//2:]
+        master_pk = hashed_seed[:len(hashed_seed) // 2]
+        master_cc = hashed_seed[len(hashed_seed) // 2:]
         return master_pk, master_cc
-
-
-class HDNode:
-    def __init__(self, private_key: str, chain_code: str, extended = False):
-        pass
